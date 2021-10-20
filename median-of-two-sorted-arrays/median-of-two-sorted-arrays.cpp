@@ -3,62 +3,63 @@ public:
     double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
         int n1 = nums1.size();
         int n2 = nums2.size();
-        if(n1 > n2)
+        if(n1>n2)
             return findMedianSortedArrays(nums2,nums1);
-        int s = (n1+n2+1)/2;
-        float ans;
-        // if(n1 == 0)
-        // {
-        //     if(s%2 == 0)
-        //     {
-        //         ans = (double)nums2[s-1] + (double)nums2[s]/2.0;
-        //     }
-        //     else
-        //         ans = (double)nums2[s-1]/1.0;
-        //     return ans;
-        // }
+        int s1 = (n1+n2+1)/2;
         int l = 0,r = n1;
+        int ind;
         while(l<=r)
         {
             int mid = (l+r)/2;
-            int onel = mid,oner = (n1 - mid);
-            int twol = (s-onel), twor = (n2 - twol);
-            int ul,ur,ll,lr;
-            if(onel == 0)
-                ul = INT_MIN;
-            else
-                ul = nums1[onel-1];
-            if(oner == 0)
-                ur = INT_MAX;
-            else
-                ur = nums1[mid];
-            
-            if(twol == 0)
-                ll = INT_MIN;
-            else
-                ll = nums2[twol-1];
-            if(twor == 0)
-                lr = INT_MAX;
-            else
-                lr = nums2[twol];
-            if(lr>=ul && ur>=ll)
+            int l1 = mid;
+            int r1 = (n1 -l1);
+            int l2 = (s1-l1);
+            int r2 = (n2 - l2);
+            int u1 = INT_MIN,v1 = INT_MIN;
+            int u2 = INT_MAX,v2 = INT_MAX;
+            if(l1!=0)
             {
-                // cout<<mid;
+                u1 = nums1[l1-1];
+            }
+            if(r1!=0)
+            {
+                u2 = nums1[l1];
+            }
+            if(l2!=0)
+            {
+                v1 = nums2[l2-1];
+            }
+            if(r2!=0)
+            {
+                v2 = nums2[l2];
+            }
+            if(u1<=v2 && v1<=u2)
+            {
+                // ind = mid;
+                // break;
                 if((n1+n2)%2 == 0)
-                    ans = ((double)max(ul,ll) + (double)min(ur,lr))/2.0;
+                {
+                    double ans = ((double)max(u1,v1) + (double)min(u2,v2))/2.0;
+                    return ans;
+                }
                 else
-                    ans = (double)max(ul,ll)/1.0;
-                break;
-            }
-            else if(ur<ll)
-            {
-                l = mid+1;
+                {
+                    double ans = (double)max(u1,v1)/1.0;
+                    return ans;
+                }
             }
             else
             {
-                r = mid-1;
+                if(u2<v1)
+                {
+                    l = mid+1;
+                }
+                else
+                {
+                    r = mid-1;
+                }
             }
         }
-        return ans;
+        return 0.0;
     }
 };
