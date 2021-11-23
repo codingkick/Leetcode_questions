@@ -1,47 +1,79 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
 class Solution {
 public:
-    vector<int> storage;
-    TreeNode* deleteNode(TreeNode* root, int key) {
-        preOrderDFS(root,key);
-        sort(storage.begin(),storage.end());
-        int start = 0;
-        int end = storage.size()-1;
-        TreeNode* newroot = NULL;
-        newroot = convert(storage,start,end,newroot);
-        return newroot;
-    }
-    
-    //getNewNode
-    TreeNode* getNewNode(int data){
-        TreeNode* newNode = new TreeNode;
-        newNode->val = data;
-        newNode->left = newNode->right = NULL;
-        return newNode;
-    }
-    
-    //preOrder function
-    void preOrderDFS(TreeNode* root,int key){
-        if(root==NULL) return;
-        if(root->val!=key){
-           storage.push_back(root->val); 
-        } 
-        preOrderDFS(root->left,key);
-        preOrderDFS(root->right,key);
-    }
-    
-    //convert function
-    TreeNode* convert(vector<int> &a , int start , int end , TreeNode* root){
-        if(start > end)
+    TreeNode* dfs(TreeNode *node,int key)
+    {
+        if(node == NULL)
+            return NULL;
+        if(node->val > key)
         {
-            root = NULL;
+            node->left = dfs(node->left,key);
+            return node;
+        }
+        else if(node->val<key)
+        {
+            node->right = dfs(node->right,key);
+            return node;
         }
         else
         {
-            int mid = (start+end)/2;
-            root = getNewNode(a[mid]);
-            root->left = convert(a,start,mid-1,root->left);
-            root->right = convert(a,mid+1,end,root->right);
+            if(node->left == NULL && node->right == NULL)
+                return NULL;
+            else if(node->left!=NULL && node->right == NULL)
+            {
+                return node->left;
+            }
+            else if(node->left==NULL && node->right != NULL)
+            {
+                return node->right;
+            }
+            else
+            {
+                TreeNode *temp = node->right,*last = node,*sec_last = NULL;
+                while(temp!=NULL)
+                {
+                    sec_last = last;
+                    last = temp;
+                    temp = temp->left;
+                }
+                if(last->right == NULL)
+                {
+                    if(sec_last == node)
+                        sec_last->right = NULL;
+                    else
+                        sec_last->left = NULL;
+                    node->val = last->val;
+                }
+                else
+                {
+                    if(sec_last == node)
+                    {
+                        node->val = last->val;
+                        sec_last->right = last->right;
+                    }
+                    else
+                    {
+                        sec_last->left = last->right;
+                        node->val = last->val;
+                    }
+                }
+                return node;
+            }
         }
-        return root;
-       }
+    }
+    TreeNode* deleteNode(TreeNode* root, int key) {
+        if(root == NULL)
+            return NULL;
+        return dfs(root,key);
+    }
 };
