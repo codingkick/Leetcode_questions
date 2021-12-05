@@ -11,17 +11,19 @@
  */
 class Solution {
 public:
-    pair<int,int> dfs(TreeNode *node)
+    vector<int> dfs(TreeNode *node)
     {
         if(node == NULL)
             return {0,0};
-        pair<int,int> v1 = dfs(node->left);
-        pair<int,int> v2 = dfs(node->right);
-        // {nahi liya,liya}
-        return {max(v1.first,v1.second) + max(v2.first,v2.second),node->val + v1.first + v2.first};
+        vector<int> v1 = dfs(node->left);
+        vector<int> v2 = dfs(node->right);
+//         [le ke,bina liye]
+        int leke = node->val + v1[1] + v2[1];
+        int binaliye = max(v1[0],v1[1]) + max(v2[0],v2[1]);
+        return {leke,binaliye};
     }
     int rob(TreeNode* root) {
-        pair<int,int> val = dfs(root);
-        return max(val.first,val.second);
+        vector<int> ans = dfs(root);
+        return max(ans[0],ans[1]);
     }
 };
