@@ -1,40 +1,50 @@
 class Solution {
 public:
-    vector<vector<int>> threeSum(vector<int>& nums) {
-        int n = nums.size();
-        sort(nums.begin(),nums.end());
-        vector<vector<int>> ans;
-        int i = 0;
-        while(i<n)
-        {
-            int v1 = nums[i];
-            int p = i+1,q = n-1;
-            while(p<q)
-            {
-                int val = v1 + nums[p] + nums[q];
-                if(val>0)
-                {
-                    q--;
-                }
-                else if(val<0)
-                {
-                    p++;
-                }
-                else
-                {
-                    ans.push_back({v1,nums[p],nums[q]});
-                    int v2 = nums[p],v3 = nums[q];
-                    while(p<q && nums[p] == v2)
-                        p++;
-                    while(p>q && nums[q] == v3)
-                        q--;
-                }
+    vector<vector<int> > threeSum(vector<int> &num) {
+    
+    vector<vector<int> > res;
+
+    std::sort(num.begin(), num.end());
+
+    for (int i = 0; i < num.size(); i++) {
+        
+        int target = -num[i];
+        int front = i + 1;
+        int back = num.size() - 1;
+
+        while (front < back) {
+
+            int sum = num[front] + num[back];
+            
+            // Finding answer which start from number num[i]
+            if (sum < target)
+                front++;
+
+            else if (sum > target)
+                back--;
+
+            else {
+                vector<int> triplet = {num[i], num[front], num[back]};
+                res.push_back(triplet);
+                
+                // Processing duplicates of Number 2
+                // Rolling the front pointer to the next different number forwards
+                while (front < back && num[front] == triplet[1]) front++;
+
+                // Processing duplicates of Number 3
+                // Rolling the back pointer to the next different number backwards
+                while (front < back && num[back] == triplet[2]) back--;
             }
-            while(i<n && nums[i] == v1)
-            { 
-                i++;
-            }
+            
         }
-        return ans;
+
+        // Processing duplicates of Number 1
+        while (i + 1 < num.size() && num[i + 1] == num[i]) 
+            i++;
+
     }
+    
+    return res;
+    
+}
 };
