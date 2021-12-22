@@ -11,25 +11,24 @@
  */
 class Solution {
 public:
-    pair<TreeNode*,int> build(vector<int>& pre, vector<int>& in,int preind,unordered_map<int,int> &mpp,int l,int r)
+    int preind;
+    TreeNode* tree(vector<int> &pre,vector<int> &in,int l,int r,unordered_map<int,int> &mpp)
     {
         if(l>r)
-            return {NULL,preind};
-        TreeNode *new_node = new TreeNode();
-        new_node->val = pre[preind];
+            return NULL;
+        TreeNode *node = new TreeNode();
+        node->val = pre[preind];
         preind++;
-        int ind = mpp[new_node->val];
-        pair<TreeNode*,int> v1 = build(pre,in,preind,mpp,l,ind-1);
-        new_node->left = v1.first;
-        pair<TreeNode*,int> v2 = build(pre,in,v1.second,mpp,ind+1,r);
-        new_node->right = v2.first;
-        return {new_node,v2.second};
+        node->left = tree(pre,in,l,mpp[node->val]-1,mpp);
+        node->right = tree(pre,in,mpp[node->val]+1,r,mpp);
+        return node;
     }
     TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
         unordered_map<int,int> mpp;
         int n = inorder.size();
         for(int i=0;i<n;i++)
             mpp[inorder[i]] = i;
-        return build(preorder,inorder,0,mpp,0,n-1).first;
+        preind = 0;
+        return tree(preorder,inorder,0,n-1,mpp);
     }
 };
