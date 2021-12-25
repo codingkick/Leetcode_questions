@@ -1,48 +1,42 @@
 class Solution {
 public:
-    bool valid(vector<int> &pos,int row,int j,int n)
+    void func(int n,vector<vector<string>> &ans,vector<int> &curr,int ind)
     {
-        for(int i=0;i<row;i++)
+        if(ind==n)
         {
-            if(pos[i] == j)
-                return false;
-            else if(abs(pos[i] -j) == row - i)
-                return false;
-        }
-        return true;
-    }
-    void func(int ind,vector<int> &pos,int n,vector<vector<string>> &ans)
-    {
-        if(ind == n)
-        {
-            string str = "";
-            for(int i=0;i<n;i++)
-                str += '.';
-            vector<string> vec(n,str);
+            string s = "";
+            for(int j=0;j<n;j++)
+                s += '.';
+            vector<string> vec(n,s);
             for(int i=0;i<n;i++)
             {
-                vec[i][pos[i]] = 'Q';
+                vec[i][curr[i]] = 'Q';
             }
             ans.push_back(vec);
             return;
         }
         for(int i=0;i<n;i++)
         {
-            if(valid(pos,ind,i,n) == true)
+            if(ispos(ind,i,curr) == true)
             {
-                pos[ind] = i;
-                func(ind+1,pos,n,ans);
+                curr[ind] = i;
+                func(n,ans,curr,ind+1);
             }
         }
     }
-    vector<vector<string>> solveNQueens(int n) {
-        vector<int> pos(n);
-        vector<vector<string>> ans;
-        for(int i=0;i<n;i++)
+    bool ispos(int ind,int pos,vector<int> &curr)
+    {
+        for(int j=0;j<ind;j++)
         {
-            pos[0] = i;
-            func(1,pos,n,ans);
+            if(curr[j] == pos || abs(curr[j]-pos) == ind-j)
+                return false;
         }
+        return true;
+    }
+    vector<vector<string>> solveNQueens(int n) {
+        vector<vector<string>> ans;
+        vector<int> curr(n,0);
+        func(n,ans,curr,0);
         return ans;
     }
 };
