@@ -2,35 +2,33 @@ class Solution {
 public:
     int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
         int n = gas.size();
-        int sum1 = 0,sum2 = 0;
+        int g = 0,c = 0;
         for(int i=0;i<n;i++)
         {
-            sum1 += gas[i];
-            sum2 += cost[i];
+            g += gas[i];
+            c += cost[i];
         }
-        if(sum1<sum2)
+        if(c>g)
             return -1;
-        // vector<int> val(n,0);
-        int i = 0,e = n;
-        sum1 = 0,sum2 = 0;
-        while(i<e)
+        int ind = 0;
+        g = 0;
+        c = 0;
+        int start = 0;
+        while(ind<n)
         {
-            sum1 += gas[i];
-            sum2 += cost[i];
-            if(sum1>=sum2)
-                i++;
+            if(g+gas[ind]>=c+cost[ind])
+            {
+                g += gas[ind];
+                c += cost[ind];
+            }
             else
             {
-                while(e>i && sum1<sum2)
-                {
-                    e--;
-                    sum1 += gas[e];
-                    sum2 += cost[e];
-                }
-                // cout<<i<<"=>"<<e<<" : "<<sum1<<" "<<sum2<<" || ";
-                i++;
+                g = 0;
+                c = 0;
+                start = ind+1;
             }
+            ind++;
         }
-        return e%n;
+        return start;
     }
 };
