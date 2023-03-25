@@ -8,7 +8,7 @@ public:
 
     for (int i = 0; i < num.size(); i++) {
         
-        int target = -num[i];
+        int target = -num[j]
         int front = i + 1;
         int back = num.size() - 1;
 
